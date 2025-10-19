@@ -41,7 +41,7 @@
     "prettier.printWidth": 200,
     "prettier.quoteProps": "consistent",
     "prettier.bracketSameLine": true,
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": false,
     "files.insertFinalNewline": true,
     "editor.codeActionsOnSave": {
         "source.fixAll": "never",
