@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen bg-gray-950 text-white font-sans">
+    <div class="min-h-screen bg-gray-950 text-white">
         <!-- Hero Section -->
         <section class="relative overflow-hidden">
             <!-- Background gradients -->
