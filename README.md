@@ -135,4 +135,4 @@ MIT License © 2025
 
 ---
 
-Built with ❤️ using Nuxt, Bun, and modern web technologies.
+Built with ♥️ using Nuxt, Bun, and modern web technologies.
