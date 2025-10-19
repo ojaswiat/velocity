@@ -133,13 +133,6 @@ The following directories have auto-imports enabled:
 
 MIT License © 2025
 
-## 👤 Author
-
-**Ojaswi Athaiya**
-
-- GitHub: [@ojaswiat](https://github.com/ojaswiat)
-- Website: [ojaswiat.com](https://ojaswiat.com)
-
 ---
 
 Built with ❤️ using Nuxt, Bun, and modern web technologies.
