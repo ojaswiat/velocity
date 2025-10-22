@@ -1,17 +1,17 @@
 # Velocity ⚡
 
-A streamlined, production-ready Nuxt template for building modern web applications with Bun, featuring Supabase authentication with GitHub OAuth.
+A streamlined, production-ready Nuxt template for building modern web applications with Bun, featuring Supabase authentication with GitHub OAuth using the official **@nuxtjs/supabase** module.
 
 ## ✨ Features
 
 - **🚀 Nuxt 4** - The latest version of the progressive Vue framework
 - **⚡ Bun** - Lightning-fast JavaScript runtime and package manager
-- **🔐 Supabase Auth** - Pre-configured GitHub OAuth authentication
+- **🔐 Supabase Auth** - Pre-configured GitHub OAuth authentication with @nuxtjs/supabase
 - **🎨 UnoCSS** - Instant on-demand atomic CSS engine with Roboto font pre-configured
 - **🗃️ Pinia** - Intuitive, type-safe state management for Vue
 - **📏 ESLint** - Comprehensive linting with security plugins
 - **🎯 TypeScript** - Full type safety out of the box
-- **📦 Auto Imports** - Auto-import components, composables, and more
+- **📦 Auto Imports** - Auto-import components, composables, and Supabase utilities
 - **🏗️ Organized Structure** - Pre-configured directories for components, stores, services, utils, and more
 - **🛡️ Auth Middleware** - Automatic route protection and authentication checks
 
@@ -20,34 +20,26 @@ A streamlined, production-ready Nuxt template for building modern web applicatio
 ```
 velocity/
 ├── app/
-│   ├── components/      # Auto-imported Vue components
-│   │   ├── AppHeader.vue    # Navigation header with auth
-│   │   └── Logo.vue         # App logo component
-│   ├── composables/     # Auto-imported composables
-│   │   ├── useAuth.ts       # Authentication composable
-│   │   └── useSupabase.ts   # Supabase client composable
-│   ├── libs/            # Shared libraries
-│   ├── middleware/      # Route middleware
-│   │   └── auth.global.ts   # Global auth middleware
-│   ├── pages/           # File-based routing
-│   │   ├── index.vue        # Landing page
-│   │   ├── login.vue        # Login page with GitHub OAuth
-│   │   └── home.vue         # Protected home page
-│   ├── plugins/         # Nuxt plugins
-│   │   └── auth.client.ts   # Auth state initialization
-│   ├── services/        # Business logic services
-│   ├── stores/          # Pinia stores (auto-imported)
-│   ├── utils/           # Utility functions
-│   └── app.vue          # Root component
+│   ├── components/        # Auto-imported Vue components
+│   │   ├── AppHeader.vue  # Navigation header with auth
+│   │   ├── AppFooter.vue  # Footer component
+│   │   ├── Counter.vue    # Demo counter component
+│   │   └── Logo.vue       # Brand logo component
+│   ├── layouts/           # Nuxt layouts
+│   │   └── default.vue    # Default layout with header/footer
+│   ├── middleware/        # Route middleware
+│   │   └── auth.global.ts # Global auth protection
+│   ├── pages/             # File-based routing
+│   │   ├── index.vue      # Landing page
+│   │   ├── login.vue      # Login with GitHub OAuth
+│   │   └── home.vue       # Protected home page
+│   └── stores/            # Pinia stores
+│       └── CounterStore.ts
 ├── lib/
-│   └── constants.ts     # App constants and routes
-├── public/              # Static assets
-├── env                  # Environment variables template
+│   └── constants.ts       # App constants and routes
+├── env                    # Environment variables template
 ├── .env                 # Your local environment variables (create this)
-├── eslint.config.mjs    # ESLint configuration
-├── nuxt.config.ts       # Nuxt configuration
-├── uno.config.ts        # UnoCSS configuration
-└── package.json         # Dependencies and scripts
+└── nuxt.config.ts         # Nuxt configuration with @nuxtjs/supabase
 ```
 
 ## 🚀 Getting Started
@@ -71,7 +63,7 @@ bun install
 
 2. **Set Up Supabase Authentication**
 
-This template uses Supabase for authentication with GitHub OAuth. Follow these steps to configure it:
+This template uses Supabase for authentication with GitHub OAuth via the official **@nuxtjs/supabase** module.
 
 #### Step 1: Create a Supabase Project
 
@@ -106,6 +98,8 @@ This template uses Supabase for authentication with GitHub OAuth. Follow these s
     NUXT_PUBLIC_SUPABASE_KEY=your-anon-key-here
     ```
 
+**Note**: The `@nuxtjs/supabase` module automatically reads these environment variables.
+
 #### Step 4: Set Up GitHub OAuth Provider
 
 1. **Create a GitHub OAuth App**:
@@ -133,7 +127,7 @@ This template uses Supabase for authentication with GitHub OAuth. Follow these s
         - **Client Secret**: Paste the Client Secret from GitHub
     - Click "Save"
 
-#### Step 5: Configure Site URL (Important for Production)
+#### Step 5: Configure Site URL and Redirect URLs
 
 1. In Supabase Dashboard, go to **Authentication** → **URL Configuration**
 2. Set your **Site URL**:
@@ -141,6 +135,7 @@ This template uses Supabase for authentication with GitHub OAuth. Follow these s
     - For production: Your actual domain (e.g., `https://yourdomain.com`)
 3. Add **Redirect URLs**:
     - Add `http://localhost:3000/**` for development
+    - Add `http://localhost:3000/home` specifically for the home redirect
     - Add your production URLs when deploying
 
 ### Running the Application
@@ -164,8 +159,8 @@ The app will be available at `http://localhost:3000`
 2. Click on "Log In" in the header or "Get Started" button
 3. Click "Continue with GitHub"
 4. Authorize the application on GitHub
-5. You'll be redirected back to the app and logged in
-6. You can now access the `/home` page
+5. You'll be redirected back to `/home` and logged in
+6. The auth state is automatically managed by `@nuxtjs/supabase`
 
 ## 📝 Available Scripts
 
@@ -190,35 +185,161 @@ bun typecheck       # Type check with Vue TSC
 
 # Cleaning
 bun clean           # Clean build artifacts
+bun clean:all       # Clean everything including node_modules
 ```
 
-## 🎨 UnoCSS
+## 🔐 Supabase GitHub Authentication
 
-The template comes pre-configured with UnoCSS and the Roboto font. You can customize the configuration in `uno.config.ts`.
+This template uses the official **@nuxtjs/supabase** module for authentication, which provides auto-imported composables and automatic session management.
 
-## 🔐 Authentication
+### Authentication Implementation
 
-The template includes a complete authentication flow using Supabase and GitHub OAuth:
+- **`@nuxtjs/supabase` module** - Official Nuxt Supabase integration
+- **`useSupabaseClient()`** - Auto-imported composable for Supabase client
+- **`useSupabaseUser()`** - Auto-imported reactive user state
+- **`app/middleware/auth.global.ts`** - Global route protection
+- **`app/pages/login.vue`** - GitHub OAuth login page
+- **`app/pages/home.vue`** - Protected home page
+- **`app/components/AppHeader.vue`** - Header with login/logout buttons
 
-### Available Auth Composables
+### Module Configuration
+
+The `@nuxtjs/supabase` module is configured in `nuxt.config.ts`:
 
 ```typescript
-const { isAuthenticated, setUser, signIn, signOut, user } = useAuth();
+supabase: {
+  redirectOptions: {
+    login: '/login',      // Where to redirect when not authenticated
+    callback: '/home',    // Where to redirect after successful OAuth
+    exclude: ['/', '/privacy', '/terms'], // Public pages
+  },
+}
+```
 
-// user: Ref<User | null> - Current authenticated user
-// isAuthenticated: ComputedRef<boolean> - Authentication status
-// signIn() - Initiate GitHub OAuth login
-// signOut() - Sign out the current user
-// setUser() - Refresh user state from Supabase
+### How Authentication Works
+
+1. **Auto-imported Composables**:
+    - `useSupabaseClient()` - Access to Supabase client instance
+    - `useSupabaseUser()` - Reactive user state (null when logged out)
+
+2. **Automatic Features**:
+    - Auto-refresh of auth tokens
+    - Session persistence across page reloads
+    - URL token cleanup after OAuth
+    - Cookie-based session management
+
+3. **Login Flow**:
+    - User clicks "Continue with GitHub" on `/login`
+    - Redirects to GitHub for authorization
+    - GitHub redirects back with auth tokens
+    - Supabase processes tokens automatically
+    - User is redirected to `/home` (configured in `redirectOptions.callback`)
+
+4. **Route Protection** (`auth.global.ts`):
+    - Checks authentication status using `useSupabaseUser()`
+    - Redirects to `/login` if accessing `/home` while logged out
+    - Redirects to `/home` if accessing `/login` while logged in
+
+### Usage Examples
+
+#### Check Authentication Status
+
+```vue
+<template>
+    <div v-if="user">
+        Welcome, {{ user.user_metadata.name }}!
+    </div>
+</template>
+
+<script setup>
+const user = useSupabaseUser();
+const isAuthenticated = computed(() => !!user.value);
+</script>
+```
+
+#### Sign In with GitHub
+
+```vue
+<script setup>
+const supabase = useSupabaseClient();
+
+async function signInWithGitHub() {
+    const { error } = await supabase.auth.signInWithOAuth({
+        options: {
+            redirectTo: `${window.location.origin}/home`
+        },
+        provider: "github"
+    });
+
+    if (error) {
+        console.error("Error signing in:", error);
+    }
+}
+</script>
+```
+
+#### Sign Out
+
+```vue
+<script setup>
+const supabase = useSupabaseClient();
+
+async function handleLogout() {
+    await supabase.auth.signOut();
+    navigateTo("/");
+}
+</script>
+```
+
+#### Access Supabase Client for Database Queries
+
+```vue
+<script setup>
+const supabase = useSupabaseClient();
+
+// Fetch data from your database
+const { data, error } = await supabase
+    .from("your_table")
+    .select("*");
+</script>
+```
+
+#### Watch User Changes
+
+```vue
+<script setup>
+const user = useSupabaseUser();
+
+watch(user, (newUser) => {
+    if (newUser) {
+        console.info("User logged in:", newUser.email);
+    } else {
+        console.info("User logged out");
+    }
+});
+</script>
 ```
 
 ### Protected Routes
 
-The global auth middleware (`app/middleware/auth.global.ts`) automatically:
+The global auth middleware (`app/middleware/auth.global.ts`) uses `useSupabaseUser()` to check authentication:
 
-- Redirects authenticated users from `/login` to `/home`
-- Redirects unauthenticated users from `/home` to `/login`
-- Allows public access to the landing page (`/`)
+```typescript
+export default defineNuxtRouteMiddleware((to) => {
+    const user = useSupabaseUser();
+    const isAuthenticated = user.value !== null;
+
+    // If going to /login and already authenticated, redirect to /home
+    if (to.path === CLIENT_ROUTES.LOGIN && isAuthenticated) {
+        return navigateTo(CLIENT_ROUTES.HOME);
+    }
+
+    // If going to /home and not authenticated, redirect to /login
+    if (to.path === CLIENT_ROUTES.HOME && !isAuthenticated) {
+        return navigateTo(CLIENT_ROUTES.LOGIN);
+    }
+});
+```
 
 ### Adding More Protected Routes
 
@@ -226,13 +347,20 @@ To protect additional routes, modify `app/middleware/auth.global.ts`:
 
 ```typescript
 export default defineNuxtRouteMiddleware((to) => {
-    const { isAuthenticated } = useAuth();
+    const user = useSupabaseUser();
+    const isAuthenticated = user.value !== null;
 
-    // Add your protected routes here
-    const protectedRoutes = [CLIENT_ROUTES.HOME, "/dashboard", "/profile"];
+    // Define all protected routes
+    const protectedRoutes = ["/home", "/dashboard", "/profile"];
 
-    if (protectedRoutes.includes(to.path) && !isAuthenticated.value) {
-        return navigateTo(CLIENT_ROUTES.LOGIN);
+    // Redirect to login if accessing protected route while not authenticated
+    if (protectedRoutes.includes(to.path) && !isAuthenticated) {
+        return navigateTo("/login");
+    }
+
+    // Redirect to home if accessing login while authenticated
+    if (to.path === "/login" && isAuthenticated) {
+        return navigateTo("/home");
     }
 });
 ```
@@ -240,6 +368,45 @@ export default defineNuxtRouteMiddleware((to) => {
 ## 🗃️ State Management
 
 Pinia stores are auto-imported from the `app/stores/` directory. See `app/stores/CounterStore.ts` for an example using the composition API pattern.
+
+```typescript
+// app/stores/CounterStore.ts
+export const useCounterStore = defineStore("counter", () => {
+    const count = ref(0);
+
+    function increment() {
+        count.value++;
+    }
+
+    return { count, increment };
+});
+```
+
+Usage in components:
+
+```vue
+<template>
+    <div>Count: {{ counterStore.count }}</div>
+    <button @click="counterStore.increment">
+        Increment
+    </button>
+</template>
+
+<script setup>
+const counterStore = useCounterStore();
+</script>
+```
+
+## 🎨 UnoCSS
+
+The template comes pre-configured with UnoCSS and the Roboto font. You can customize the configuration in `uno.config.ts`.
+
+```html
+// Example utility classes
+<div class="flex items-center justify-center bg-gray-950 text-white">
+    <h1 class="text-4xl font-bold">Hello Velocity</h1>
+</div>
+```
 
 ## 📏 ESLint Configuration
 
@@ -270,6 +437,13 @@ The following directories have auto-imports enabled:
 - `app/middleware/**` - Middleware functions
 - `app/utils/**` - Utility functions
 
+Plus auto-imports from `@nuxtjs/supabase`:
+
+- `useSupabaseClient()` - Supabase client
+- `useSupabaseUser()` - Current user state
+- `useSupabaseSession()` - Current session
+- `useSupabaseAuthClient()` - Auth client
+
 ## 🚢 Deploying to Production
 
 When deploying to production:
@@ -277,12 +451,12 @@ When deploying to production:
 1. **Update GitHub OAuth App**:
     - Go to your GitHub OAuth App settings
     - Add your production domain to **Homepage URL**
-    - Add `https://your-project-ref.supabase.co/auth/v1/callback` to **Authorization callback URL**
+    - Update **Authorization callback URL** to use your production Supabase URL
 
 2. **Update Supabase Settings**:
     - In Supabase Dashboard → Authentication → URL Configuration
-    - Update **Site URL** to your production domain
-    - Add your production domain to **Redirect URLs**
+    - Update **Site URL** to your production domain (e.g., `https://yourdomain.com`)
+    - Add your production redirect URLs (e.g., `https://yourdomain.com/**`)
 
 3. **Set Environment Variables**:
     - Set `NUXT_PUBLIC_SUPABASE_URL` in your hosting platform
@@ -298,24 +472,33 @@ When deploying to production:
 ### "Invalid redirect URL" error
 
 - Ensure your redirect URL in GitHub OAuth app matches: `https://your-project-ref.supabase.co/auth/v1/callback`
-- Check that the URL is added to Supabase redirect URLs list
+- Check that the URL is added to Supabase redirect URLs list in Authentication → URL Configuration
 
 ### "Missing Supabase credentials" error
 
 - Verify your `.env` file exists and contains the correct values
 - Restart your dev server after creating/updating `.env`
+- Check that variable names are `NUXT_PUBLIC_SUPABASE_URL` and `NUXT_PUBLIC_SUPABASE_KEY`
 
 ### Authentication not working
 
 - Check browser console for errors
 - Verify Supabase project is active
 - Ensure GitHub OAuth provider is enabled in Supabase
+- Verify Site URL and Redirect URLs are configured in Supabase
+
+### Redirect loop after login
+
+- This can happen if middleware runs before Supabase processes the OAuth tokens
+- The `@nuxtjs/supabase` module handles this automatically
+- Ensure you're using `useSupabaseUser()` in your middleware (not creating custom auth state)
 
 ## 📖 Learn More
 
 - [Nuxt Documentation](https://nuxt.com/docs)
 - [Bun Documentation](https://bun.sh/docs)
 - [Supabase Documentation](https://supabase.com/docs)
+- [@nuxtjs/supabase Module](https://supabase.nuxtjs.org)
 - [Supabase Auth with GitHub](https://supabase.com/docs/guides/auth/social-login/auth-github)
 - [UnoCSS Documentation](https://unocss.dev)
 - [Pinia Documentation](https://pinia.vuejs.org)
@@ -326,4 +509,4 @@ MIT License © 2025
 
 ---
 
-Built with ♥️ using Nuxt, Bun, and modern web technologies.
+Built with ♥️ using Nuxt, Bun, Supabase, and modern web technologies.

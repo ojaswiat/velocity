@@ -31,18 +31,20 @@
 
 <script setup lang="ts">
 const route = useRoute();
-const { isAuthenticated, signOut } = useAuth();
+
+const supabase = useSupabaseClient();
+const user = useSupabaseUser();
+
+const isAuthenticated = computed(() => user.value !== null);
 
 function goToLogin() {
     navigateTo(CLIENT_ROUTES.LOGIN);
 }
 
 async function handleLogout() {
-    await signOut();
-
-    // Only navigate to login if not on the landing page
+    await supabase.auth.signOut();
     if (route.path !== CLIENT_ROUTES.INDEX) {
-        navigateTo(CLIENT_ROUTES.INDEX);
+        navigateTo(CLIENT_ROUTES.LOGIN);
     }
 }
 </script>

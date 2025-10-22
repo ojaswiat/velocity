@@ -34,7 +34,7 @@
             <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl shadow-2xl p-8">
                 <button
                     class="group relative w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 font-semibold overflow-hidden transform hover:scale-105"
-                    @click="onGitHubLoginClick">
+                    @click="signInWithGitHub">
                     <!-- Shine effect on hover -->
                     <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 group-hover:translate-x-full transition-all duration-700"></div>
 
@@ -69,14 +69,28 @@
 </template>
 
 <script setup lang="ts">
-const { signIn } = useAuth();
+const supabase = useSupabaseClient();
+const user = useSupabaseUser();
 
-// GitHub login click handler
-async function onGitHubLoginClick() {
-    await signIn();
-    // OAuth will redirect to GitHub, then back to the redirectTo URL
-    // No need to navigate here as the OAuth flow handles it
+async function signInWithGitHub() {
+    const { error } = await supabase.auth.signInWithOAuth({
+        options: {
+            redirectTo: `${window.location.origin}${CLIENT_ROUTES.HOME}`,
+        },
+        provider: "github",
+    });
+
+    if (error) {
+        console.error("Error signing in:", error);
+    }
 }
+
+watch(user, () => {
+    if (user.value) {
+        // Redirect to /home instead of default '/'
+        navigateTo(CLIENT_ROUTES.HOME);
+    }
+}, { immediate: true });
 
 useHead({
     meta: [

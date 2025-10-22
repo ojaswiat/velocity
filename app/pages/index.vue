@@ -169,7 +169,8 @@
 </template>
 
 <script setup lang="ts">
-const { isAuthenticated } = useAuth();
+const user = useSupabaseUser();
+const isAuthenticated = computed(() => user.value !== null);
 
 const FEATURES = [
     {
