@@ -23,6 +23,7 @@ export default defineNuxtConfig({
             resolve("./app/middleware/**"),
             resolve("./app/services/**"),
             resolve("./app/stores/**"),
+            resolve("./app/types/**"),
             resolve("./app/utils/**"),
         ],
     },
