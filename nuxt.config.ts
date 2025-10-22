@@ -1,3 +1,4 @@
+import process from "node:process";
 import { createResolver } from "@nuxt/kit";
 
 const { resolve } = createResolver(import.meta.url);
@@ -17,11 +18,12 @@ export default defineNuxtConfig({
 
     imports: {
         dirs: [
-            resolve("./app/libs/**/*"),
+            resolve("./lib/**/*"),
+            resolve("./app/components/**"),
+            resolve("./app/composables/**"),
+            resolve("./app/middleware/**"),
             resolve("./app/services/**"),
             resolve("./app/stores/**"),
-            resolve("./app/components/**"),
-            resolve("./app/middleware/**"),
             resolve("./app/utils/**"),
         ],
     },
@@ -30,6 +32,7 @@ export default defineNuxtConfig({
     modules: [
         "@unocss/nuxt",
         "@pinia/nuxt",
+        "@nuxtjs/supabase",
 
         [
             "@nuxt/eslint",
@@ -40,4 +43,24 @@ export default defineNuxtConfig({
             },
         ],
     ],
+
+    // Runtime Config
+    runtimeConfig: {
+        public: {
+            supabaseKey: process.env.NUXT_PUBLIC_SUPABASE_KEY || "",
+            supabaseURL: process.env.NUXT_PUBLIC_SUPABASE_URL || "",
+        },
+    },
+
+    supabase: {
+        // By default Supabase redirects to the login page if the user is not authenticated
+        redirectOptions: {
+            // Redirect to home page if the user is authenticated
+            callback: "/home",
+            // Exclude public pages from auth redirect
+            exclude: ["/", "/privacy", "/terms"],
+            // Redirect to login page if the user is not authenticated
+            login: "/login",
+        },
+    },
 });

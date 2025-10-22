@@ -1,0 +1,15 @@
+# Supabase Configuration
+# Add your Supabase project credentials here
+
+# Your Supabase project URL (found in Supabase Dashboard > Settings > API)
+NUXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+
+# Your Supabase anonymous/public key (found in Supabase Dashboard > Settings > API)
+NUXT_PUBLIC_SUPABASE_KEY=your-anon-key-here
+
+# Instructions:
+# 1. Copy this file and rename it to .env (or use it directly with: source env)
+# 2. Replace the placeholder values with your actual Supabase credentials
+# 3. Never commit your actual .env file to version control
+# 4. Make sure .env is in your .gitignore file
+

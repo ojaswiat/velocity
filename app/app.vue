@@ -1,5 +1,11 @@
 <template>
     <div class="font-sans">
-        <NuxtPage />
+        <NuxtLayout>
+            <NuxtPage />
+        </NuxtLayout>
     </div>
 </template>
+
+<style lang="scss">
+@use "~/assets/reset.scss";
+</style>
