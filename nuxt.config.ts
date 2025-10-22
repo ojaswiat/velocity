@@ -1,4 +1,3 @@
-import process from "node:process";
 import { createResolver } from "@nuxt/kit";
 
 const { resolve } = createResolver(import.meta.url);
@@ -45,12 +44,7 @@ export default defineNuxtConfig({
     ],
 
     // Runtime Config
-    runtimeConfig: {
-        public: {
-            supabaseKey: process.env.NUXT_PUBLIC_SUPABASE_KEY || "",
-            supabaseURL: process.env.NUXT_PUBLIC_SUPABASE_URL || "",
-        },
-    },
+    runtimeConfig: {},
 
     supabase: {
         // By default Supabase redirects to the login page if the user is not authenticated
