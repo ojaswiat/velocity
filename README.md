@@ -80,8 +80,8 @@ This template uses Supabase for authentication with GitHub OAuth via the officia
 1. In your Supabase project dashboard, go to **Settings** (⚙️ icon on the left sidebar)
 2. Click on **API** in the settings menu
 3. You'll find two important values:
-    - **Project URL**: This is your `NUXT_PUBLIC_SUPABASE_URL`
-    - **anon/public key**: This is your `NUXT_PUBLIC_SUPABASE_KEY`
+    - **Project URL**: This is your `SUPABASE_URL`
+    - **anon/public key**: This is your `SUPABASE_KEY`
 4. Copy these values for the next step
 
 #### Step 3: Configure Environment Variables
@@ -94,8 +94,8 @@ This template uses Supabase for authentication with GitHub OAuth via the officia
 
 2. Open `.env` and replace the placeholder values with your actual Supabase credentials:
     ```bash
-    NUXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
-    NUXT_PUBLIC_SUPABASE_KEY=your-anon-key-here
+    SUPABASE_URL=https://your-project-ref.supabase.co
+    SUPABASE_KEY=your-anon-key-here
     ```
 
 **Note**: The `@nuxtjs/supabase` module automatically reads these environment variables.
@@ -459,8 +459,8 @@ When deploying to production:
     - Add your production redirect URLs (e.g., `https://yourdomain.com/**`)
 
 3. **Set Environment Variables**:
-    - Set `NUXT_PUBLIC_SUPABASE_URL` in your hosting platform
-    - Set `NUXT_PUBLIC_SUPABASE_KEY` in your hosting platform
+    - Set `SUPABASE_URL` in your hosting platform
+    - Set `SUPABASE_KEY` in your hosting platform
 
 4. **Build and Deploy**:
     ```bash
@@ -478,7 +478,7 @@ When deploying to production:
 
 - Verify your `.env` file exists and contains the correct values
 - Restart your dev server after creating/updating `.env`
-- Check that variable names are `NUXT_PUBLIC_SUPABASE_URL` and `NUXT_PUBLIC_SUPABASE_KEY`
+- Check that variable names are `SUPABASE_URL` and `SUPABASE_KEY`
 
 ### Authentication not working
 
